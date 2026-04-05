@@ -1,0 +1,232 @@
+openapi: "3.0.3"
+info:
+  title: Cart Service API
+  version: "1.0.0"
+  description: REST API for managing shopping carts.
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: cart
+
+paths:
+  /api/v1/cart/{userID}:
+    get:
+      tags: [cart]
+      summary: Get cart contents
+      parameters:
+        - $ref: '#/components/parameters/userID'
+      responses:
+        "200":
+          description: Cart contents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags: [cart]
+      summary: Clear the cart
+      parameters:
+        - $ref: '#/components/parameters/userID'
+      responses:
+        "204":
+          description: Cart cleared
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/cart/{userID}/items:
+    post:
+      tags: [cart]
+      summary: Add an item to the cart
+      parameters:
+        - $ref: '#/components/parameters/userID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddItemRequest'
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalError'
+
+  /api/v1/cart/{userID}/items/{productID}:
+    patch:
+      tags: [cart]
+      summary: Update item quantity
+      parameters:
+        - $ref: '#/components/parameters/userID'
+        - $ref: '#/components/parameters/productID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQuantityRequest'
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags: [cart]
+      summary: Remove an item from the cart
+      parameters:
+        - $ref: '#/components/parameters/userID'
+        - $ref: '#/components/parameters/productID'
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalError'
+
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /metrics:
+    get:
+      summary: Prometheus metrics endpoint
+      responses:
+        "200":
+          description: Prometheus exposition format
+
+components:
+  parameters:
+    userID:
+      name: userID
+      in: path
+      required: true
+      schema:
+        type: string
+      example: user-123
+    productID:
+      name: productID
+      in: path
+      required: true
+      schema:
+        type: string
+      example: prod-456
+
+  schemas:
+    Item:
+      type: object
+      properties:
+        product_id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+
+    Cart:
+      type: object
+      properties:
+        user_id:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        total:
+          type: number
+          format: double
+        updated_at:
+          type: string
+          format: date-time
+
+    AddItemRequest:
+      type: object
+      required: [product_id, quantity]
+      properties:
+        product_id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          minimum: 1
+
+    UpdateQuantityRequest:
+      type: object
+      required: [quantity]
+      properties:
+        quantity:
+          type: integer
+          minimum: 1
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Cart or item not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

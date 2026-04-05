@@ -1,0 +1,38 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gocyclo
+    - misspell
+    - revive
+    - godot
+    - noctx
+    - bodyclose
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+      - name: error-return
+        severity: warning
+  godot:
+    scope: declarations
+
+issues:
+  exclude-rules:
+    # test files may skip error checks (e.g. defer client.Close())
+    - path: _test\.go
+      linters:
+        - errcheck
+        - godot
