@@ -11,9 +11,9 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/marketplace/cart-service/internal/domain"
-	"github.com/marketplace/cart-service/internal/repository"
-	"github.com/marketplace/cart-service/pkg/metrics"
+	"github.com/marketplace/marketplace-bucket/internal/domain"
+	"github.com/marketplace/marketplace-bucket/internal/repository"
+	"github.com/marketplace/marketplace-bucket/pkg/metrics"
 )
 
 // CartService is the interface for cart business operations.

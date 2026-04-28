@@ -1,10 +1,10 @@
-BIN     := ./bin/cart-service
+BIN     := ./bin/marketplace-bucket
 MAIN    := ./cmd/server
 LDFLAGS := -ldflags="-s -w"
 
 .PHONY: build test lint run tidy docker-up docker-down
 
-## build: compile the binary to ./bin/cart-service
+## build: compile the binary to ./bin/marketplace-bucket
 build:
 	go build $(LDFLAGS) -o $(BIN) $(MAIN)
 
@@ -30,7 +30,7 @@ tidy:
 	go mod tidy
 	go mod verify
 
-## docker-up: start all services (cart-service + Redis + Jaeger)
+## docker-up: start all services (marketplace-bucket + Redis + Jaeger)
 docker-up:
 	docker-compose up -d --build
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a `cart-service` — a production-ready Go microservice for shopping cart management. It has not been implemented yet; `promt.md` contains the full specification.
+This is a `marketplace-bucket` — a production-ready Go microservice for shopping cart management. It has not been implemented yet; `promt.md` contains the full specification.
 
 ## Commands
 

@@ -9,9 +9,9 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/marketplace/cart-service/internal/domain"
-	"github.com/marketplace/cart-service/internal/service"
-	"github.com/marketplace/cart-service/pkg/metrics"
+	"github.com/marketplace/marketplace-bucket/internal/domain"
+	"github.com/marketplace/marketplace-bucket/internal/service"
+	"github.com/marketplace/marketplace-bucket/pkg/metrics"
 )
 
 // Handler holds dependencies for HTTP request handling.

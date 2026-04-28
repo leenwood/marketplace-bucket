@@ -1,4 +1,4 @@
-module github.com/marketplace/cart-service
+module github.com/marketplace/marketplace-bucket
 
 go 1.25
 

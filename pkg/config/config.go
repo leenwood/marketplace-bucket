@@ -63,7 +63,7 @@ func Load() (*Config, error) {
 	v.SetDefault("redis.addr", "localhost:6379")
 	v.SetDefault("redis.db", 0)
 	v.SetDefault("otel.endpoint", "localhost:4317")
-	v.SetDefault("otel.service_name", "cart-service")
+	v.SetDefault("otel.service_name", "marketplace-bucket")
 	v.SetDefault("cart_ttl", "168h") // 7 days
 
 	v.SetEnvPrefix("CART")

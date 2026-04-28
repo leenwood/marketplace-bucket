@@ -4,7 +4,7 @@ package repository
 import (
 	"context"
 
-	"github.com/marketplace/cart-service/internal/domain"
+	"github.com/marketplace/marketplace-bucket/internal/domain"
 )
 
 // CartRepository is the interface for cart storage operations.

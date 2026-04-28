@@ -13,7 +13,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/marketplace/cart-service/internal/domain"
+	"github.com/marketplace/marketplace-bucket/internal/domain"
 )
 
 const (

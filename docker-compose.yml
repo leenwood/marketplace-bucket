@@ -1,8 +1,8 @@
 version: "3.9"
 
 services:
-  cart-service:
-    build: cart-service
+  marketplace-bucket:
+    build: marketplace-bucket
     ports:
       - "8080:8080"  # REST API
       - "9090:9090"  # gRPC

@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/marketplace/cart-service/internal/application"
-	"github.com/marketplace/cart-service/pkg/config"
+	"github.com/marketplace/marketplace-bucket/internal/application"
+	"github.com/marketplace/marketplace-bucket/pkg/config"
 )
 
 func main() {

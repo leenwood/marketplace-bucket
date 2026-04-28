@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/marketplace/cart-service/internal/domain"
-	"github.com/marketplace/cart-service/internal/repository"
+	"github.com/marketplace/marketplace-bucket/internal/domain"
+	"github.com/marketplace/marketplace-bucket/internal/repository"
 )
 
 func setupMiniRedis(t *testing.T) (*repository.RedisRepository, *miniredis.Miniredis) {

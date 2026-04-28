@@ -14,14 +14,14 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	grpchandler "github.com/marketplace/cart-service/internal/handler/grpc"
-	httphandler "github.com/marketplace/cart-service/internal/handler/http"
-	"github.com/marketplace/cart-service/internal/repository"
-	"github.com/marketplace/cart-service/internal/service"
-	"github.com/marketplace/cart-service/pkg/config"
-	"github.com/marketplace/cart-service/pkg/metrics"
-	"github.com/marketplace/cart-service/pkg/pb"
-	"github.com/marketplace/cart-service/pkg/tracing"
+	grpchandler "github.com/marketplace/marketplace-bucket/internal/handler/grpc"
+	httphandler "github.com/marketplace/marketplace-bucket/internal/handler/http"
+	"github.com/marketplace/marketplace-bucket/internal/repository"
+	"github.com/marketplace/marketplace-bucket/internal/service"
+	"github.com/marketplace/marketplace-bucket/pkg/config"
+	"github.com/marketplace/marketplace-bucket/pkg/metrics"
+	"github.com/marketplace/marketplace-bucket/pkg/pb"
+	"github.com/marketplace/marketplace-bucket/pkg/tracing"
 )
 
 // App holds the wired application and owns its lifecycle.

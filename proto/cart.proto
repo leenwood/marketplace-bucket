@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package cart.v1;
 
-option go_package = "github.com/marketplace/cart-service/pkg/pb";
+option go_package = "github.com/marketplace/marketplace-bucket/pkg/pb";
 
 // CartService manages shopping carts identified by a user ID.
 service CartService {

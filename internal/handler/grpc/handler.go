@@ -8,10 +8,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/marketplace/cart-service/internal/domain"
-	"github.com/marketplace/cart-service/internal/service"
-	"github.com/marketplace/cart-service/pkg/metrics"
-	"github.com/marketplace/cart-service/pkg/pb"
+	"github.com/marketplace/marketplace-bucket/internal/domain"
+	"github.com/marketplace/marketplace-bucket/internal/service"
+	"github.com/marketplace/marketplace-bucket/pkg/metrics"
+	"github.com/marketplace/marketplace-bucket/pkg/pb"
 )
 
 // Handler implements pb.CartServiceServer.
