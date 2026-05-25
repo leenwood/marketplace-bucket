@@ -6,13 +6,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/marketplace/marketplace-bucket/internal/config"
+	"github.com/marketplace/marketplace-bucket/internal"
 	"github.com/marketplace/marketplace-bucket/internal/app/service"
 	"github.com/marketplace/marketplace-bucket/internal/platform/logger"
 )
 
 func main() {
-	cfg, err := config.Load()
+	cfg, err := internal.Load()
 	if err != nil {
 		os.Stderr.WriteString("load config: " + err.Error() + "\n")
 		os.Exit(1)

@@ -8,14 +8,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/marketplace/marketplace-bucket/internal"
 	apphttp "github.com/marketplace/marketplace-bucket/internal/app/http"
 	"github.com/marketplace/marketplace-bucket/internal/app/http/handler"
-	"github.com/marketplace/marketplace-bucket/internal/config"
 	"github.com/marketplace/marketplace-bucket/internal/core/usecase"
 	redisstorage "github.com/marketplace/marketplace-bucket/internal/infra/storage/redis"
 )
 
-func RunServer(ctx context.Context, cfg *config.Config, log *slog.Logger) error {
+func RunServer(ctx context.Context, cfg *internal.Config, log *slog.Logger) error {
 	infra, err := initInfra(ctx, cfg, log)
 	if err != nil {
 		return fmt.Errorf("init infra: %w", err)

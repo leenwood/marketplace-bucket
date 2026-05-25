@@ -1,4 +1,4 @@
-package config
+package internal
 
 import (
 	"fmt"
@@ -9,11 +9,11 @@ import (
 )
 
 type Config struct {
-	HTTP HTTPConfig
+	HTTP  HTTPConfig
 	Redis RedisConfig
-	Log  LogConfig
-	OTel OTelConfig
-	App  AppConfig
+	Log   LogConfig
+	OTel  OTelConfig
+	App   AppConfig
 }
 
 type HTTPConfig struct {

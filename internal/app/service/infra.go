@@ -6,15 +6,15 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/marketplace/marketplace-bucket/internal"
 	goredis "github.com/redis/go-redis/v9"
 
-	"github.com/marketplace/marketplace-bucket/internal/config"
 	"github.com/marketplace/marketplace-bucket/internal/platform/metrics"
 	"github.com/marketplace/marketplace-bucket/internal/platform/tracing"
 )
 
 type Infra struct {
-	Cfg     *config.Config
+	Cfg     *internal.Config
 	Log     *slog.Logger
 	Metrics *metrics.Metrics
 	Redis   *goredis.Client
@@ -22,7 +22,7 @@ type Infra struct {
 	shutdownTracing tracing.ShutdownFunc
 }
 
-func initInfra(ctx context.Context, cfg *config.Config, log *slog.Logger) (*Infra, error) {
+func initInfra(ctx context.Context, cfg *internal.Config, log *slog.Logger) (*Infra, error) {
 	initCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 

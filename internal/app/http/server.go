@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"net/http/pprof"
 
+	"github.com/marketplace/marketplace-bucket/internal"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
 	"github.com/marketplace/marketplace-bucket/internal/app/http/handler"
 	"github.com/marketplace/marketplace-bucket/internal/app/http/middleware"
-	"github.com/marketplace/marketplace-bucket/internal/config"
 	"github.com/marketplace/marketplace-bucket/internal/platform/metrics"
 )
 
@@ -21,7 +21,7 @@ type Deps struct {
 	Ping    func() error
 }
 
-func NewServer(cfg config.HTTPConfig, deps Deps) *http.Server {
+func NewServer(cfg internal.HTTPConfig, deps Deps) *http.Server {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) {
