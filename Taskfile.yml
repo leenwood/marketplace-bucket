@@ -68,6 +68,11 @@ tasks:
       - docker-compose down -v
       - docker-compose up -d
 
+  seed:
+    desc: Seed Redis with sample cart data
+    cmds:
+      - go run ./cmd/seed
+
   docs:
     desc: Generate Swagger docs (requires swag CLI)
     cmds:

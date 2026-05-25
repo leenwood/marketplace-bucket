@@ -47,6 +47,8 @@ components:
   # Entrypoints
   ServerCmd:
     in: cmd/server
+  SeedCmd:
+    in: cmd/seed
 
 deps:
 
@@ -110,6 +112,10 @@ deps:
     anyVendorDeps: true
 
   ServerCmd:
+    anyProjectDeps: true
+    anyVendorDeps: true
+
+  SeedCmd:
     anyProjectDeps: true
     anyVendorDeps: true
 
