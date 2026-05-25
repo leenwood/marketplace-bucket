@@ -14,7 +14,7 @@ import (
 func main() {
 	cfg, err := internal.Load()
 	if err != nil {
-		os.Stderr.WriteString("load config: " + err.Error() + "\n")
+		_, _ = os.Stderr.WriteString("load config: " + err.Error() + "\n")
 		os.Exit(1)
 	}
 

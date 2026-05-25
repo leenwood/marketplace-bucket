@@ -14,7 +14,7 @@ import (
 	redisstorage "github.com/marketplace/marketplace-bucket/internal/infra/storage/redis"
 )
 
-func setupMiniRedis(t *testing.T) (*redisstorage.Repository, *miniredis.Miniredis) {
+func setupMiniRedis(t *testing.T) *redisstorage.Repository {
 	t.Helper()
 	mr, err := miniredis.Run()
 	require.NoError(t, err)
@@ -23,11 +23,11 @@ func setupMiniRedis(t *testing.T) (*redisstorage.Repository, *miniredis.Miniredi
 	client := goredis.NewClient(&goredis.Options{Addr: mr.Addr()})
 	t.Cleanup(func() { _ = client.Close() })
 
-	return redisstorage.New(client, 24*time.Hour), mr
+	return redisstorage.New(client, 24*time.Hour)
 }
 
 func TestRedisRepository_SaveAndGet(t *testing.T) {
-	repo, _ := setupMiniRedis(t)
+	repo := setupMiniRedis(t)
 	ctx := context.Background()
 
 	cart := domain.NewCart("user1")
@@ -49,14 +49,14 @@ func TestRedisRepository_SaveAndGet(t *testing.T) {
 }
 
 func TestRedisRepository_GetNotFound(t *testing.T) {
-	repo, _ := setupMiniRedis(t)
+	repo := setupMiniRedis(t)
 
 	_, err := repo.Get(context.Background(), "nonexistent")
 	assert.ErrorIs(t, err, domain.ErrCartNotFound)
 }
 
 func TestRedisRepository_Delete(t *testing.T) {
-	repo, _ := setupMiniRedis(t)
+	repo := setupMiniRedis(t)
 	ctx := context.Background()
 
 	cart := domain.NewCart("user1")
@@ -73,7 +73,7 @@ func TestRedisRepository_TTL(t *testing.T) {
 	defer mr.Close()
 
 	client := goredis.NewClient(&goredis.Options{Addr: mr.Addr()})
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	ttl := 5 * time.Second
 	repo := redisstorage.New(client, ttl)
@@ -89,7 +89,7 @@ func TestRedisRepository_TTL(t *testing.T) {
 }
 
 func TestRedisRepository_OverwriteCart(t *testing.T) {
-	repo, _ := setupMiniRedis(t)
+	repo := setupMiniRedis(t)
 	ctx := context.Background()
 
 	cart := domain.NewCart("user1")
