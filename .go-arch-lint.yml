@@ -12,7 +12,7 @@ components:
 
   # Layer 0 — Foundation (no internal deps)
   Config:
-    in: internal/config
+    in: internal
   Domain:
     in: internal/core/domain
   Logger:
@@ -47,10 +47,6 @@ components:
   # Entrypoints
   ServerCmd:
     in: cmd/server
-
-  # Docs
-  SwaggerDocs:
-    in: docs/swagger
 
 deps:
 
@@ -117,6 +113,3 @@ deps:
     anyProjectDeps: true
     anyVendorDeps: true
 
-  SwaggerDocs:
-    anyProjectDeps: true
-    anyVendorDeps: true
