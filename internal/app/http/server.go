@@ -46,7 +46,7 @@ func NewServer(cfg internal.HTTPConfig, deps Deps) *http.Server {
 	}))
 
 	mux.HandleFunc("/swagger/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "docs/swagger.yaml")
+		http.ServeFile(w, r, "docs/swagger/swagger.yaml")
 	})
 
 	if cfg.PprofEnabled {
