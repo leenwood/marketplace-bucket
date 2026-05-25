@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"net/http/pprof"
 
-	"github.com/marketplace/marketplace-bucket/internal"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
+	"github.com/marketplace/marketplace-bucket/internal"
 	"github.com/marketplace/marketplace-bucket/internal/app/http/handler"
 	"github.com/marketplace/marketplace-bucket/internal/app/http/middleware"
 	"github.com/marketplace/marketplace-bucket/internal/platform/metrics"

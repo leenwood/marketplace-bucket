@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/marketplace/marketplace-bucket/internal"
 	goredis "github.com/redis/go-redis/v9"
 
+	"github.com/marketplace/marketplace-bucket/internal"
 	"github.com/marketplace/marketplace-bucket/internal/platform/metrics"
 	"github.com/marketplace/marketplace-bucket/internal/platform/tracing"
 )
