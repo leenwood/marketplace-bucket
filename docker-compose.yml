@@ -2,13 +2,14 @@ version: "3.9"
 
 services:
   marketplace-bucket:
-    build: marketplace-bucket
+    build: .
     ports:
-      - "8080:8080"  # REST API
-      - "9090:9090"  # gRPC
+      - "8080:8080"
     environment:
       REDIS_ADDR: redis:6379
-      OTEL_EXPORTER_OTLP_ENDPOINT: jaeger:4317
+      OTEL_ENABLED: "true"
+      OTEL_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_ENDPOINT: jaeger:4318
     depends_on:
       redis:
         condition: service_healthy
@@ -28,6 +29,6 @@ services:
     image: jaegertracing/all-in-one:latest
     ports:
       - "16686:16686"  # Jaeger UI
-      - "4317:4317"    # OTLP gRPC receiver
+      - "4318:4318"    # OTLP HTTP receiver
     environment:
       COLLECTOR_OTLP_ENABLED: "true"

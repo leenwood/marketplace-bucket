@@ -2,37 +2,29 @@ package main
 
 import (
 	"context"
-	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/marketplace/marketplace-bucket/internal/application"
-	"github.com/marketplace/marketplace-bucket/pkg/config"
+	"github.com/marketplace/marketplace-bucket/internal/config"
+	"github.com/marketplace/marketplace-bucket/internal/app/service"
+	"github.com/marketplace/marketplace-bucket/internal/platform/logger"
 )
 
 func main() {
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	slog.SetDefault(logger)
-
 	cfg, err := config.Load()
 	if err != nil {
-		slog.Error("load config", "error", err)
+		os.Stderr.WriteString("load config: " + err.Error() + "\n")
 		os.Exit(1)
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	log := logger.New(cfg.Log.Level, cfg.Log.Format)
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	go func() {
-		<-quit
-		cancel()
-	}()
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
-	if err := application.New(cfg).Run(ctx); err != nil {
-		slog.Error("application error", "error", err)
+	if err := service.RunServer(ctx, cfg, log); err != nil {
+		log.Error("server error", "error", err)
 		os.Exit(1)
 	}
 }

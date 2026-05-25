@@ -1,0 +1,74 @@
+version: "3"
+
+vars:
+  BIN: ./bin/marketplace-bucket
+  MAIN: ./cmd/server
+  MODULE: github.com/marketplace/marketplace-bucket
+
+tasks:
+  build:
+    desc: Compile the server binary
+    cmds:
+      - CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o {{.BIN}} {{.MAIN}}
+
+  run:
+    desc: Run the HTTP server locally
+    cmds:
+      - go run {{.MAIN}}
+
+  test:
+    desc: Run unit tests with race detector
+    cmds:
+      - go test -race -count=1 -timeout=60s ./...
+
+  test:cover:
+    desc: Run tests and output coverage report
+    cmds:
+      - go test -race -count=1 -timeout=60s -coverprofile=coverage.out ./...
+      - go tool cover -func=coverage.out
+
+  test:integration:
+    desc: Run integration tests (requires Docker)
+    cmds:
+      - go test -race -count=1 -timeout=120s -tags=integration ./...
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - go tool golangci-lint run ./...
+
+  arch:
+    desc: Check architecture constraints
+    cmds:
+      - go tool go-arch-lint check
+
+  fmt:
+    desc: Format code
+    cmds:
+      - gofmt -l -w .
+
+  vet:
+    desc: Run go vet
+    cmds:
+      - go vet ./...
+
+  docker:up:
+    desc: Start infrastructure containers
+    cmds:
+      - docker-compose up -d
+
+  docker:down:
+    desc: Stop infrastructure containers
+    cmds:
+      - docker-compose down
+
+  docker:reset:
+    desc: Reset infrastructure containers (remove volumes)
+    cmds:
+      - docker-compose down -v
+      - docker-compose up -d
+
+  docs:
+    desc: Generate Swagger docs (requires swag CLI)
+    cmds:
+      - swag init -g {{.MAIN}}/main.go -o docs

@@ -1,38 +1,57 @@
-run:
-  timeout: 5m
-  tests: true
+version: "2"
 
 linters:
   enable:
     - errcheck
-    - gosimple
     - govet
     - ineffassign
     - staticcheck
     - unused
-    - gocyclo
     - misspell
-    - revive
+    - unconvert
+    - unparam
+    - dogsled
+    - dupl
+    - exhaustive
     - godot
+    - nilerr
     - noctx
     - bodyclose
-
-linters-settings:
-  gocyclo:
-    min-complexity: 15
-  revive:
+    - contextcheck
+    - revive
+    - gosec
+  settings:
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: indent-error-flow
+        - name: var-naming
+        - name: error-return
+    dupl:
+      threshold: 150
+    exhaustive:
+      default-signifies-exhaustive: true
+    godot:
+      scope: toplevel
+      capital: false
+  exclusions:
+    paths:
+      - "docs/swagger"
     rules:
-      - name: exported
-        severity: warning
-      - name: error-return
-        severity: warning
-  godot:
-    scope: declarations
+      - linters: [dupl, gosec]
+        path: "_test\\.go"
+      - linters: [revive]
+        path: "cmd/"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/marketplace/marketplace-bucket
 
 issues:
-  exclude-rules:
-    # test files may skip error checks (e.g. defer client.Close())
-    - path: _test\.go
-      linters:
-        - errcheck
-        - godot
+  max-issues-per-linter: 50
+  max-same-issues: 5

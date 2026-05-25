@@ -1,0 +1,122 @@
+version: 3
+workdir: .
+
+allow:
+  depOnAnyVendor: true
+  deepScan: false
+
+excludeFiles:
+  - "^.*_test\\.go$"
+
+components:
+
+  # Layer 0 — Foundation (no internal deps)
+  Config:
+    in: internal/config
+  Domain:
+    in: internal/core/domain
+  Logger:
+    in: internal/platform/logger
+  Metrics:
+    in: internal/platform/metrics
+  Tracing:
+    in: internal/platform/tracing
+
+  # Layer 1 — Contracts (→ Foundation)
+  Port:
+    in: internal/core/port
+
+  # Layer 2 — Infrastructure (→ Foundation + Contracts)
+  RedisStorage:
+    in: internal/infra/storage/redis
+
+  # Layer 3 — Use Cases (→ Foundation + Contracts)
+  UseCase:
+    in: internal/core/usecase
+
+  # Layer 4 — Application (→ all layers)
+  Middleware:
+    in: internal/app/http/middleware
+  Handler:
+    in: internal/app/http/handler
+  AppHTTP:
+    in: internal/app/http
+  AppService:
+    in: internal/app/service
+
+  # Entrypoints
+  ServerCmd:
+    in: cmd/server
+
+  # Docs
+  SwaggerDocs:
+    in: docs/swagger
+
+deps:
+
+  # Foundation: vendor only
+  Config:
+    anyVendorDeps: true
+  Domain:
+    anyVendorDeps: true
+  Logger:
+    anyVendorDeps: true
+  Metrics:
+    anyVendorDeps: true
+  Tracing:
+    anyVendorDeps: true
+
+  # Contracts
+  Port:
+    mayDependOn:
+      - Domain
+
+  # Infrastructure
+  RedisStorage:
+    mayDependOn:
+      - Domain
+      - Port
+      - Tracing
+
+  # Use Cases
+  UseCase:
+    mayDependOn:
+      - Domain
+      - Port
+      - Logger
+      - Tracing
+
+  # Application
+  Middleware:
+    mayDependOn:
+      - Logger
+      - Tracing
+      - Metrics
+
+  Handler:
+    mayDependOn:
+      - Domain
+      - Port
+      - Metrics
+      - Logger
+
+  AppHTTP:
+    mayDependOn:
+      - Config
+      - Handler
+      - Middleware
+      - Metrics
+      - Logger
+
+  # Bootstrap: no restrictions
+  AppService:
+    anyProjectDeps: true
+    anyVendorDeps: true
+
+  ServerCmd:
+    anyProjectDeps: true
+    anyVendorDeps: true
+
+  SwaggerDocs:
+    anyProjectDeps: true
+    anyVendorDeps: true
