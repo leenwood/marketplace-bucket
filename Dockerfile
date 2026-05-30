@@ -1,21 +1,20 @@
-FROM golang:1.22-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY marketplace-bucket .
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /marketplace-bucket ./cmd/server
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /bin/server ./cmd/server && \
+    CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /bin/seed   ./cmd/seed
 
-# ────────────────────────────────────────────────────────────────────────────
+FROM scratch
 
-FROM alpine:3.19
-
-RUN apk --no-cache add ca-certificates tzdata
-
-COPY --from=builder /marketplace-bucket /marketplace-bucket
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=builder /bin/server /server
+COPY --from=builder /bin/seed   /seed
 
 EXPOSE 8080 9090
 
-ENTRYPOINT ["/marketplace-bucket"]
+ENTRYPOINT ["/server"]
