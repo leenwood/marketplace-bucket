@@ -18,4 +18,5 @@ type CartService interface {
 	UpdateQuantity(ctx context.Context, userID string, productID string, quantity int) (*domain.Cart, error)
 	GetCart(ctx context.Context, userID string) (*domain.Cart, error)
 	ClearCart(ctx context.Context, userID string) error
+	MergeCart(ctx context.Context, guestUserID, targetUserID string) (*domain.Cart, error)
 }

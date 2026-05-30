@@ -176,6 +176,59 @@ func (uc *CartUseCase) ClearCart(ctx context.Context, userID string) error {
 	return nil
 }
 
+func (uc *CartUseCase) MergeCart(ctx context.Context, guestUserID, targetUserID string) (*domain.Cart, error) {
+	ctx, span := uc.tracer.Start(ctx, "usecase.MergeCart")
+	defer span.End()
+	span.SetAttributes(
+		attribute.String("guest_user_id", guestUserID),
+		attribute.String("target_user_id", targetUserID),
+	)
+
+	if err := validateUserID(guestUserID); err != nil {
+		return nil, err
+	}
+	if err := validateUserID(targetUserID); err != nil {
+		return nil, err
+	}
+	if guestUserID == targetUserID {
+		return nil, domain.ErrInvalidUserID
+	}
+
+	guestCart, err := uc.repo.Get(ctx, guestUserID)
+	if err != nil {
+		if errors.Is(err, domain.ErrCartNotFound) {
+			// Нет гостевой корзины — возвращаем текущую корзину пользователя
+			return uc.GetCart(ctx, targetUserID)
+		}
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+
+	targetCart, err := uc.getOrCreate(ctx, targetUserID)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return nil, fmt.Errorf("get target cart: %w", err)
+	}
+
+	for _, item := range guestCart.Items {
+		targetCart.AddItem(item)
+	}
+
+	if err := uc.repo.Save(ctx, targetCart); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return nil, fmt.Errorf("save merged cart: %w", err)
+	}
+
+	// Удалить гостевую корзину — не критично если не удалится (TTL уберёт)
+	_ = uc.repo.Delete(ctx, guestUserID)
+
+	logger.FromContext(ctx, uc.log).Debug("cart merged", "guest_user_id", guestUserID, "target_user_id", targetUserID)
+	return targetCart, nil
+}
+
 func (uc *CartUseCase) getOrCreate(ctx context.Context, userID string) (*domain.Cart, error) {
 	cart, err := uc.repo.Get(ctx, userID)
 	if err != nil {

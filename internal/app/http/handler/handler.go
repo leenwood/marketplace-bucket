@@ -28,6 +28,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("PATCH /api/v1/cart/{userID}/items/{productID}", h.updateQuantity)
 	mux.HandleFunc("GET /api/v1/cart/{userID}", h.getCart)
 	mux.HandleFunc("DELETE /api/v1/cart/{userID}", h.clearCart)
+	mux.HandleFunc("POST /api/v1/cart/{userID}/merge", h.mergeCart)
 }
 
 type addItemBody struct {
@@ -114,6 +115,37 @@ func (h *Handler) clearCart(w http.ResponseWriter, r *http.Request) {
 
 	h.metrics.CartOperationsTotal.WithLabelValues("clear_cart").Inc()
 	w.WriteHeader(http.StatusNoContent)
+}
+
+type mergeCartBody struct {
+	GuestUserID string `json:"guest_user_id"`
+}
+
+func (h *Handler) mergeCart(w http.ResponseWriter, r *http.Request) {
+	userID := r.PathValue("userID")
+
+	var body mergeCartBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	if body.GuestUserID == "" {
+		writeError(w, http.StatusBadRequest, "guest_user_id is required")
+		return
+	}
+	if body.GuestUserID == userID {
+		writeError(w, http.StatusBadRequest, "guest_user_id must differ from user id")
+		return
+	}
+
+	cart, err := h.svc.MergeCart(r.Context(), body.GuestUserID, userID)
+	if err != nil {
+		writeServiceError(w, err)
+		return
+	}
+
+	h.metrics.CartOperationsTotal.WithLabelValues("merge_cart").Inc()
+	writeJSON(w, http.StatusOK, cart)
 }
 
 func writeServiceError(w http.ResponseWriter, err error) {
