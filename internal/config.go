@@ -67,7 +67,7 @@ func Load() (*Config, error) {
 		OTel: OTelConfig{
 			Enabled:     getEnvBool("OTEL_ENABLED", false),
 			Exporter:    getEnv("OTEL_EXPORTER", "stdout"),
-			Endpoint:    getEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "localhost:4318"),
+			Endpoint:    getEnv("OTEL_ENDPOINT", "localhost:4318"),
 			ServiceName: getEnv("OTEL_SERVICE_NAME", "marketplace-bucket"),
 		},
 		App: AppConfig{

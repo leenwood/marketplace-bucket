@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine AS builder
+FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
 
@@ -15,6 +15,6 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /bin/server /server
 COPY --from=builder /bin/seed   /seed
 
-EXPOSE 8080 9090
+EXPOSE 8080
 
 ENTRYPOINT ["/server"]
